@@ -63,7 +63,7 @@ We are currently in the **Genesis Phase**. We are seeking contributors, co-archi
 
 * Design a visual "Tech Tree" interface that allows users to seamlessly navigate, zoom, and track their progress through the global web of human knowledge.
 * Craft intuitive "Progressive Disclosure" mechanics to prevent users from being overwhelmed by complex, multi-layered documentation.
-* **[Documentation Hub](docs/index.html)** — Access the central portal for all system specifications, including the **Suggested Style Identity**.
+* **[Suggested Style Identity](https://tomcegraphics.github.io/B.L.U.E.-System/styleguidebook.html)** — Review our existing visual language and core design principles.
 
 
 ### ⚖️ Legal & Governance Hackers
