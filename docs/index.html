@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B.L.U.E. Protocol | Documentation Hub</title>
+    <meta name="description" content="Central access point for the B.L.U.E. System specifications, guidelines, and technical documentation.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Core CDNs -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind Configuration (Sync with Style Guide) -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#0D0F12',
+                        surface: '#111418',
+                        hard: '#1F242D',
+                        protocol: { DEFAULT: '#3B82F6', mint: '#2563EB' },
+                        id: '#93C5FD',
+                    },
+                    fontFamily: {
+                        serif: ['"Instrument Serif"', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0D0F12;
+            color: #E5E7EB;
+        }
+        .glass-card {
+            background: rgba(17, 20, 24, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(31, 36, 45, 1);
+        }
+        .glow-hover:hover {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-protocol selection:text-white min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden">
+
+    <!-- Background Grid -->
+    <div class="absolute inset-0 z-0 opacity-10 pointer-events-none"
+        style="background-image: linear-gradient(#1F242D 1px, transparent 1px), linear-gradient(90deg, #1F242D 1px, transparent 1px); background-size: 40px 40px;">
+    </div>
+
+    <!-- Content -->
+    <div class="relative z-10 max-w-4xl w-full">
+        <!-- Header -->
+        <header class="text-center mb-16">
+            <div class="inline-flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-protocol-mint flex items-center justify-center">
+                    <span class="font-sans font-bold text-white text-2xl leading-none">B</span>
+                </div>
+                <div class="h-[1px] w-12 bg-hard"></div>
+                <span class="font-mono text-[10px] uppercase tracking-[0.3em] text-id">Access Portal</span>
+            </div>
+            
+            <h1 class="text-5xl lg:text-7xl font-serif italic tracking-tight text-white mb-4">
+                Knowledge Repository
+            </h1>
+            <p class="text-gray-400 font-mono text-[10px] uppercase tracking-widest">
+                Decentralized Documentation // B.L.U.E. Protocol v1.1.0
+            </p>
+        </header>
+
+        <!-- Main Hub Grid -->
+        <div class="grid md:grid-cols-2 gap-6">
+            
+            <!-- Style Guide Link -->
+            <a href="styleguidebook.html" class="glass-card p-8 group transition-all duration-300 glow-hover rounded-sm">
+                <div class="flex justify-between items-start mb-6">
+                    <div class="p-3 bg-protocol/10 text-protocol border border-protocol/20">
+                        <i data-lucide="palette" class="w-6 h-6"></i>
+                    </div>
+                    <span class="font-mono text-[8px] text-protocol uppercase tracking-widest border border-protocol/30 px-2 py-0.5">Verified Spec</span>
+                </div>
+                <h2 class="text-2xl font-serif italic text-white mb-2 group-hover:text-protocol transition-colors">Style Identity</h2>
+                <p class="text-sm text-gray-500 font-sans leading-relaxed mb-6">
+                    The immutable visual specification for the B.L.U.E. System. Includes brand tokens, typography, and UI patterns.
+                </p>
+                <div class="flex items-center gap-2 font-mono text-[10px] text-gray-400 group-hover:text-white transition-colors">
+                    EXPLORE GUIDELINES <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                </div>
+            </a>
+
+            <!-- Placeholder for Whitepaper / Future Docs -->
+            <div class="glass-card p-8 opacity-50 border-dashed border-hard rounded-sm flex flex-col justify-center">
+                <div class="p-3 bg-hard text-gray-500 w-fit mb-6">
+                    <i data-lucide="file-text" class="w-6 h-6"></i>
+                </div>
+                <h2 class="text-2xl font-serif italic text-gray-500 mb-2">Protocol Whitepaper</h2>
+                <p class="text-sm text-gray-600 font-sans leading-relaxed">
+                    The technical foundation of the Knowledge DAG and Verifier Consensus.
+                </p>
+                <div class="mt-4 font-mono text-[8px] text-gray-600 uppercase tracking-widest">
+                    [ NODE_STATUS: AWAITING_DEPLOYMENT ]
+                </div>
+            </div>
+
+            <!-- Placeholder for API Docs -->
+            <div class="glass-card p-8 opacity-50 border-dashed border-hard rounded-sm flex flex-col justify-center">
+                <div class="p-3 bg-hard text-gray-500 w-fit mb-6">
+                    <i data-lucide="code" class="w-6 h-6"></i>
+                </div>
+                <h2 class="text-2xl font-serif italic text-gray-500 mb-2">API Reference</h2>
+                <p class="text-sm text-gray-600 font-sans leading-relaxed">
+                    Integration guides for the Ceramic Network streams and IPFS pinning services.
+                </p>
+                <div class="mt-4 font-mono text-[8px] text-gray-600 uppercase tracking-widest">
+                    [ NODE_STATUS: SYNCING ]
+                </div>
+            </div>
+
+            <!-- Community / Matrix Space -->
+            <div class="glass-card p-8 group transition-all duration-300 glow-hover rounded-sm flex flex-col justify-center border-protocol/10 bg-protocol/5">
+                <div class="p-3 bg-protocol-mint text-white w-fit mb-6 shadow-[0_0_15px_rgba(37,99,235,0.3)]">
+                    <i data-lucide="users" class="w-6 h-6"></i>
+                </div>
+                <h2 class="text-2xl font-serif italic text-white mb-2">Node Network</h2>
+                <p class="text-sm text-gray-400 font-sans leading-relaxed mb-6">
+                    Join the decentralized network of educators and engineers building the future of open knowledge.
+                </p>
+                <a href="#" class="flex items-center gap-2 font-mono text-[10px] text-protocol hover:text-white transition-colors">
+                    JOIN THE MATRIX <i data-lucide="external-link" class="w-3 h-3"></i>
+                </a>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-24 pt-8 border-t border-hard flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="font-mono text-[8px] text-gray-600 uppercase tracking-[0.3em]">
+                &copy; 2026 B.L.U.E. Protocol // Knowledge is Power
+            </div>
+            <div class="flex gap-6">
+                <a href="../README.md" class="font-mono text-[10px] text-gray-500 hover:text-white transition-colors uppercase tracking-widest">Repository</a>
+                <a href="#" class="font-mono text-[10px] text-gray-500 hover:text-white transition-colors uppercase tracking-widest">Network Status</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
