@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B.L.U.E. Protocol | Brand Guidelines</title>
+    <meta name="description" content="Immutable Specification for B.L.U.E. Protocol Brand Identity & System Design">
+
+    <!-- Google Fonts: Intelligence (Serif), Interface (Sans), Instructions (Mono) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Core CDNs -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <!-- Tailwind Configuration (Brand Tokens) -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#0D0F12',
+                        surface: '#111418',
+                        rail: '#0E1116',
+                        hard: '#1F242D',
+                        protocol: { DEFAULT: '#3B82F6', mint: '#2563EB' },
+                        id: '#93C5FD',
+                        consensus: '#22C55E',
+                        eviction: '#EF4444',
+                        voter: '#EAB308',
+                    },
+                    fontFamily: {
+                        serif: ['"Instrument Serif"', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    borderRadius: {
+                        DEFAULT: '2px', // Rigid technical silhouette
+                        sm: '2px',
+                        md: '4px',
+                        lg: '6px',
+                        full: '9999px',
+                    },
+                    letterSpacing: {
+                        widest: '0.2em',
+                    },
+                    animation: {
+                        'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'deep-scan': 'scan 2s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        scan: {
+                            '0%, 100%': { transform: 'translateY(-100%)', opacity: 0 },
+                            '50%': { transform: 'translateY(100%)', opacity: 0.5 },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Global CSS (CSS Custom Properties) -->
+    <style>
+        :root {
+            --color-void: #0D0F12;
+            --color-surface: #111418;
+            --color-rail: #0E1116;
+            --color-hard: #1F242D;
+            --color-protocol: #3B82F6;
+            --color-mint: #2563EB;
+            --color-id: #93C5FD;
+            --color-consensus: #22C55E;
+            --color-eviction: #EF4444;
+            --color-voter: #EAB308;
+
+            --font-intelligence: 'Instrument Serif', serif;
+            --font-interface: 'Inter', sans-serif;
+            --font-instructions: 'JetBrains Mono', monospace;
+
+            --radius-rigid: 2px;
+            --space-base: 4px;
+        }
+
+        body {
+            background-color: var(--color-void);
+            color: #E5E7EB;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar Formatting */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--color-void);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-hard);
+            border-radius: 0px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-protocol);
+        }
+
+        /* Syntax Highlighting overrides */
+        pre {
+            background: var(--color-rail) !important;
+            border: 1px solid var(--color-hard);
+            border-radius: var(--radius-rigid);
+        }
+
+        code {
+            font-family: var(--font-instructions);
+            font-size: 12px;
+            color: var(--color-id);
+        }
+
+        /* Utility */
+        .text-balance {
+            text-wrap: balance;
+        }
+
+        .nav-active {
+            border-left-color: var(--color-protocol);
+            background-color: rgba(59, 130, 246, 0.05);
+            color: #fff;
+        }
+
+        @media print {
+            nav {
+                display: none !important;
+            }
+
+            main {
+                margin-left: 0 !important;
+            }
+
+            body {
+                background: white;
+                color: black;
+            }
+
+            .bg-void,
+            .bg-surface,
+            .bg-rail {
+                background: white !important;
+                border: 1px solid #ccc;
+            }
+
+            * {
+                text-shadow: none !important;
+                box-shadow: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body x-data="brandBook()" class="font-sans antialiased selection:bg-protocol selection:text-white"
+    @scroll.window="updateNav">
+
+    <!-- Toast Notification -->
+    <div x-show="toast.show" x-transition.opacity
+        class="fixed bottom-6 right-6 bg-surface border border-hard px-4 py-3 z-50 flex items-center gap-3 shadow-2xl">
+        <i data-lucide="check-circle" class="w-4 h-4 text-consensus"></i>
+        <span class="font-mono text-[10px] uppercase tracking-widest text-gray-300" x-text="toast.message"></span>
+    </div>
+
+    <!-- NAVIGATION: Sticky Left Sidebar -->
+    <nav class="fixed top-0 left-0 h-screen w-64 bg-rail border-r border-hard z-40 hidden lg:flex flex-col">
+        <div class="h-20 flex items-center px-6 border-b border-hard">
+            <!-- Shield Logo Mark inside Nav -->
+            <div class="w-8 h-8 bg-protocol-mint flex items-center justify-center mr-3">
+                <span class="font-sans font-bold text-white text-lg leading-none">B</span>
+            </div>
+            <div>
+                <h1 class="font-mono text-[10px] uppercase tracking-widest text-white">B.L.U.E.</h1>
+                <p class="font-mono text-[8px] tracking-widest text-id">v1.1.0-STABLE</p>
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto py-6 flex flex-col gap-1 px-3">
+            <template x-for="section in sections" :key="section.id">
+                <a :href="'#' + section.id"
+                    :class="{'nav-active': activeSection === section.id, 'border-transparent text-gray-500 hover:text-gray-300 hover:bg-surface': activeSection !== section.id}"
+                    class="px-3 py-2 text-[11px] font-mono uppercase tracking-widest border-l-2 transition-colors flex items-center gap-3">
+                    <i :data-lucide="section.icon" class="w-3.5 h-3.5"></i>
+                    <span x-text="section.title"></span>
+                </a>
+            </template>
+        </div>
+
+        <div class="p-6 border-t border-hard">
+            <button
+                class="w-full py-2 px-3 border border-hard font-mono text-[10px] tracking-widest text-gray-400 hover:text-white hover:border-protocol transition-colors flex items-center justify-center gap-2">
+                <i data-lucide="download" class="w-3 h-3"></i> EXPORT SPEC
+            </button>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="lg:ml-64 min-h-screen relative">
+
+        <!-- SECTION 1: Hero -->
+        <section id="hero"
+            class="min-h-screen flex flex-col justify-center px-6 lg:px-24 relative overflow-hidden section-observe">
+            <!-- Decorative Grid Background -->
+            <div class="absolute inset-0 z-0 opacity-10 pointer-events-none"
+                style="background-image: linear-gradient(var(--color-hard) 1px, transparent 1px), linear-gradient(90deg, var(--color-hard) 1px, transparent 1px); background-size: 32px 32px;">
+            </div>
+
+            <div class="relative z-10 max-w-4xl gsap-stagger">
+                <div class="flex items-center gap-4 mb-8">
+                    <div
+                        class="w-16 h-16 bg-protocol-mint flex items-center justify-center shadow-[0_0_30px_rgba(37,99,235,0.3)]">
+                        <span class="font-sans font-bold text-white text-4xl leading-none">B</span>
+                    </div>
+                    <div class="h-[1px] w-24 bg-hard"></div>
+                    <span
+                        class="font-mono text-[10px] uppercase tracking-widest text-id border border-hard px-2 py-1 bg-surface">Immutable
+                        Spec</span>
+                </div>
+
+                <h1 class="text-6xl lg:text-8xl font-serif italic tracking-tight text-white mb-6 leading-none">
+                    B.L.U.E. Protocol
+                </h1>
+                <p class="text-xl lg:text-2xl font-sans font-medium text-gray-400 mb-12 max-w-2xl text-balance">
+                    A decentralized epistemological engine designed to preserve and verify human technical knowledge.
+                </p>
+
+                <div class="flex gap-4">
+                    <a href="#components"
+                        class="bg-protocol-mint text-white font-bold tracking-widest font-sans text-xs px-6 py-4 uppercase rounded-sm hover:bg-protocol transition-colors">
+                        Access Ledger
+                    </a>
+                    <a href="#story"
+                        class="border border-hard text-gray-200 font-mono text-xs px-6 py-4 uppercase tracking-widest hover:bg-surface transition-colors flex items-center gap-2">
+                        Read Philosophy <i data-lucide="arrow-down" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Scroll cue -->
+            <div
+                class="absolute bottom-12 left-6 lg:left-24 font-mono text-[10px] tracking-widest text-gray-600 uppercase flex flex-col items-center gap-2">
+                <span>Scroll to Init</span>
+                <div class="w-[1px] h-12 bg-gradient-to-b from-gray-600 to-transparent"></div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: Brand Story & Values -->
+        <section id="story" class="py-32 px-6 lg:px-24 border-t border-hard section-observe">
+            <div class="max-w-4xl gsap-stagger">
+                <p class="font-mono text-[10px] uppercase tracking-widest text-protocol mb-4">01 // Philosophy</p>
+                <h2 class="text-4xl lg:text-6xl font-serif italic tracking-tight text-white mb-16">The Mission</h2>
+
+                <div class="text-xl font-sans text-gray-300 leading-relaxed mb-24 border-l-2 border-hard pl-8">
+                    Knowledge must be earned through rigorous builds and peer verification, not just consumed. The
+                    B.L.U.E. (Broad Learning Universal Education) Protocol serves as the terminal layer of truth.
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Pillar 1 -->
+                    <div class="bg-surface border border-hard p-8 hover:border-protocol/50 transition-colors">
+                        <i data-lucide="cpu" class="w-8 h-8 text-id mb-6"></i>
+                        <h3 class="font-sans font-bold text-white mb-3">Technical but Ethereal</h3>
+                        <p class="font-sans text-sm text-gray-400">Grounded in engineering. Elevated by editorial
+                            weight.</p>
+                    </div>
+                    <!-- Pillar 2 -->
+                    <div class="bg-surface border border-hard p-8 hover:border-protocol/50 transition-colors">
+                        <i data-lucide="scale" class="w-8 h-8 text-id mb-6"></i>
+                        <h3 class="font-sans font-bold text-white mb-3">Authoritative & Objective</h3>
+                        <p class="font-sans text-sm text-gray-400">The UI does not praise the user; it meticulously
+                            verifies them.</p>
+                    </div>
+                    <!-- Pillar 3 -->
+                    <div class="bg-surface border border-hard p-8 hover:border-protocol/50 transition-colors">
+                        <i data-lucide="database" class="w-8 h-8 text-id mb-6"></i>
+                        <h3 class="font-sans font-bold text-white mb-3">High-Density Wisdom</h3>
+                        <p class="font-sans text-sm text-gray-400">Information is packed tight, reflecting complex
+                            knowledge structures.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: Logo System -->
+        <section id="logo" class="py-32 px-6 lg:px-24 border-t border-hard bg-rail section-observe">
+            <div class="max-w-5xl gsap-stagger">
+                <p class="font-mono text-[10px] uppercase tracking-widest text-protocol mb-4">02 // Mark</p>
+                <h2 class="text-4xl lg:text-6xl font-serif italic tracking-tight text-white mb-16">The Node</h2>
+
+                <div class="grid lg:grid-cols-2 gap-12 mb-16">
+                    <div class="bg-void border border-hard p-24 flex items-center justify-center relative group">
+                        <div class="absolute top-4 left-4 font-mono text-[10px] text-gray-500 uppercase">Primary Mark
+                        </div>
+                        <!-- Primary SVG -->
+                        <svg width="160" height="160" viewBox="0 0 100 100"
+                            class="group-hover:scale-105 transition-transform duration-500">
+                            <rect width="100" height="100" fill="#2563EB" />
+                            <text x="50" y="72" font-family="Inter" font-weight="bold" font-size="64" fill="white"
+                                text-anchor="middle">B</text>
+                        </svg>
+                    </div>
+
+                    <div class="bg-void border border-hard p-24 flex items-center justify-center relative group">
+                        <div class="absolute top-4 left-4 font-mono text-[10px] text-gray-500 uppercase">System Icon
+                            (The Shield)</div>
+                        <!-- Secondary Mark -->
+                        <i data-lucide="shield"
+                            class="w-32 h-32 text-protocol group-hover:scale-105 transition-transform duration-500"
+                            stroke-width="1.5"></i>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="border border-hard p-8 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-consensus text-white font-mono text-[10px] px-2 py-1">DO
+                        </div>
+                        <div class="bg-void p-12 flex justify-center mb-4">
+                            <svg width="80" height="80" viewBox="0 0 100 100">
+                                <rect width="100" height="100" fill="#2563EB" /><text x="50" y="72" font-family="Inter"
+                                    font-weight="bold" font-size="64" fill="white" text-anchor="middle">B</text>
+                            </svg>
+                        </div>
+                        <p class="font-mono text-xs text-gray-400">Maintain sharp 90-degree corners. The block
+                            represents a strict node.</p>
+                    </div>
+                    <div class="border border-eviction/30 p-8 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-eviction text-white font-mono text-[10px] px-2 py-1">DON'T
+                        </div>
+                        <div class="bg-void p-12 flex justify-center mb-4">
+                            <svg width="80" height="80" viewBox="0 0 100 100">
+                                <rect width="100" height="100" rx="20" fill="#2563EB" /><text x="50" y="72"
+                                    font-family="Inter" font-weight="bold" font-size="64" fill="white"
+                                    text-anchor="middle">B</text>
+                            </svg>
+                        </div>
+                        <p class="font-mono text-xs text-gray-400">Never round the logo. Do not soften the technical
+                            silhouette.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: Color Palette (Technical Brutalism) -->
+        <section id="colors" class="py-32 px-6 lg:px-24 border-t border-hard section-observe">
+            <div class="max-w-5xl gsap-stagger">
+                <p class="font-mono text-[10px] uppercase tracking-widest text-protocol mb-4">03 // Spectrum</p>
+                <h2 class="text-4xl lg:text-6xl font-serif italic tracking-tight text-white mb-6">The Obsidian Stack
+                </h2>
+                <p class="font-sans text-gray-400 mb-16 max-w-2xl">High-contrast, low-glare technical environments.
+                    Colors define utility, status, and system boundaries.</p>
+
+                <!-- Core Neutrals -->
+                <h3 class="font-mono text-sm tracking-widest text-white mb-6 border-b border-hard pb-2">Core Structural
+                </h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+                    <template x-for="color in colors.neutrals">
+                        <div class="cursor-pointer group" @click="copy(color.hex, color.name)">
+                            <div class="h-32 w-full border border-hard mb-3 relative flex items-end p-3 transition-all"
+                                :style="`background-color: ${color.hex}`">
+                                <div
+                                    class="opacity-0 group-hover:opacity-100 absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity">
+                                    <span class="font-mono text-[10px] text-white">COPY HEX</span>
+                                </div>
+                            </div>
+                            <p class="font-sans font-bold text-white text-sm" x-text="color.name"></p>
+                            <p class="font-mono text-xs text-gray-500 mt-1" x-text="color.hex"></p>
+                            <p class="font-sans text-[11px] text-gray-400 mt-2" x-text="color.purpose"></p>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Functional Accents -->
+                <h3 class="font-mono text-sm tracking-widest text-white mb-6 border-b border-hard pb-2">Functional
+                    Signals</h3>
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <template x-for="color in colors.accents">
+                        <div class="cursor-pointer group" @click="copy(color.hex, color.name)">
+                            <div class="h-32 w-full border border-hard mb-3 relative flex items-end p-3 transition-all"
+                                :style="`background-color: ${color.hex}`">
+                                <div
+                                    class="opacity-0 group-hover:opacity-100 absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity">
+                                    <span class="font-mono text-[10px] text-white">COPY HEX</span>
+                                </div>
+                            </div>
+                            <p class="font-sans font-bold text-white text-sm" x-text="color.name"></p>
+                            <p class="font-mono text-xs text-gray-500 mt-1" x-text="color.hex"></p>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: Typography -->
+        <section id="typography" class="py-32 px-6 lg:px-24 border-t border-hard bg-rail section-observe">
+            <div class="max-w-5xl gsap-stagger">
+                <p class="font-mono text-[10px] uppercase tracking-widest text-protocol mb-4">04 // Syntax</p>
+                <h2 class="text-4xl lg:text-6xl font-serif italic tracking-tight text-white mb-16">Three Pillars</h2>
+
+                <!-- Intelligence -->
+                <div class="mb-20 pb-16 border-b border-hard">
+                    <div class="flex justify-between items-end mb-6">
+                        <div>
+                            <h3 class="font-sans font-bold text-xl text-white">Intelligence</h3>
+                            <p class="font-mono text-xs text-id mt-1">Instrument Serif / Italic / Tracking Tight</p>
+                        </div>
+                        <span class="font-mono text-[10px] text-gray-500 uppercase">Editorial Voice</span>
+                    </div>
+                    <div class="bg-void border border-hard p-8 overflow-hidden">
+                        <p contenteditable
+                            class="font-serif italic tracking-tight text-6xl md:text-8xl text-white outline-none">
+                            Synthesize Data.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Interface -->
+                <div class="mb-20 pb-16 border-b border-hard">
+                    <div class="flex justify-between items-end mb-6">
+                        <div>
+                            <h3 class="font-sans font-bold text-xl text-white">Interface</h3>
+                            <p class="font-mono text-xs text-id mt-1">Inter / Medium / Text Gray 200</p>
+                        </div>
+                        <span class="font-mono text-[10px] text-gray-500 uppercase">Universal Communicator</span>
+                    </div>
+                    <div class="bg-void border border-hard p-8 overflow-hidden">
+                        <p contenteditable
+                            class="font-sans font-medium text-2xl md:text-4xl text-gray-200 outline-none leading-relaxed">
+                            Knowledge is a bridge. Legibility ensures the protocol remains accessible to all verified
+                            nodes.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Instructions -->
+                <div>
+                    <div class="flex justify-between items-end mb-6">
+                        <div>
+                            <h3 class="font-sans font-bold text-xl text-white">Instructions</h3>
+                            <p class="font-mono text-xs text-id mt-1">JetBrains Mono / Uppercase / Text 10px / Tracking
+                                0.2em</p>
+                        </div>
+                        <span class="font-mono text-[10px] text-gray-500 uppercase">Raw Data</span>
+                    </div>
+                    <div class="bg-void border border-hard p-8 overflow-hidden">
+                        <p contenteditable
+                            class="font-mono uppercase text-[10px] tracking-[0.2em] text-id outline-none">
+                            HASH: 0x9F8C...2B1A | STATUS: VERIFIED | TIMESTAMP: 2026-05-15T19:36:00Z
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: Iconography -->
+        <section id="icons" class="py-32 px-6 lg:px-24 border-t border-hard section-observe">
+            <div class="max-w-5xl gsap-stagger">
+                <p class="font-mono text-[10px] uppercase tracking-widest text-protocol mb-4">05 // Symbology</p>
+                <h2 class="text-4xl lg:text-6xl font-serif italic tracking-tight text-white mb-6">Lucide System</h2>
+                <p class="font-sans text-gray-400 mb-16 max-w-2xl">Icons must maintain a 1.5px stroke width. Used
+                    strictly for utility, navigation, and system status mapping.</p>
+
+                <div class="bg-surface border border-hard p-8">
+                    <input type="text" x-model="iconSearch" placeholder="SEARCH SYMBOLS..."
+                        class="w-full bg-void border border-hard px-4 py-3 font-mono text-xs text-white focus:outline-none focus:border-protocol mb-8">
+
+                    <div class="grid grid-cols-4 md:grid-cols-8 gap-4">
+                        <template x-for="icon in filteredIcons" :key="icon">
+                            <div class="aspect-square border border-hard bg-void flex flex-col items-center justify-center gap-2 hover:border-protocol hover:text-protocol text-gray-400 transition-colors group cursor-pointer"
+                                @click="copy(`<i data-lucide='${icon}'></i>`, icon)">
+                                <i :data-lucide="icon" class="w-6 h-6 stroke-[1.5px]"></i>
+                                <span
+                                    class="font-mono text-[8px] uppercase tracking-wider opacity-0 group-hover:opacity-100"
+                                    x-text="icon"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 7: Spacing & Grid -->
+        <section id="grid" class="py-32 px-6 lg:px-24 border-t border-hard bg-rail section-observe">
+            <div class="max-w-5xl gsap-stagger">
+                <p class="font-mono text-[10px] uppercase tracking-widest text-protocol mb-4">06 // Structure</p>
+                <h2 class="text-4xl lg:text-6xl font-serif italic tracking-tight text-white mb-6">High-Density Matrix
+                </h2>
+                <p class="font-sans text-gray-400 mb-16 max-w-2xl">4px base unit. Padding is tight (p-4 to p-6) to keep
+                    the interface feeling like a professional dashboard. No rounded-full corners.</p>
+
+                <div class="flex flex-col gap-4 mb-16">
+                    <template x-for="space in [4, 8, 16, 24, 32, 48, 64]">
+                        <div class="flex items-center gap-4">
+                            <div class="w-16 font-mono text-[10px] text-gray-500 text-right" x-text="`${space}px`">
+                            </div>
+                            <div class="bg-protocol/20 border border-protocol/50 h-4" :style="`width: ${space}px`">
+                            </div>
+                            <div class="font-mono text-[10px] text-id" x-text="`space-${space/4}`"></div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 8: COMPONENTS LIBRARY (Live Interactive) -->
+        <section id="components" class="py-32 px-6 lg:px-24 border-t border-hard section-observe">
+            <div class="max-w-6xl gsap-stagger">
+                <p class="font-mono text-[10px] uppercase tracking-widest text-protocol mb-4">07 // Protocol Entities
+                </p>
+                <h2 class="text-4xl lg:text-6xl font-serif italic tracking-tight text-white mb-16">Component Library
+                </h2>
+
+                <!-- COMPONENT 1: Buttons -->
+                <div class="mb-24">
+                    <h3 class="font-mono text-sm text-white mb-6 border-b border-hard pb-2">8.1 // Action Nodes
+                        (Buttons)</h3>
+                    <div class="bg-surface border border-hard p-12 flex flex-wrap gap-6 items-center">
+                        <!-- Mint -->
+                        <button
+                            class="bg-protocol-mint text-white font-sans font-bold tracking-widest text-xs px-6 py-3 uppercase rounded-sm hover:bg-protocol transition-colors focus:ring-2 ring-protocol/50 outline-none">
+                            The Mint (Primary)
+                        </button>
+                        <!-- Audit -->
+                        <button
+                            class="border border-hard text-gray-200 font-mono text-xs px-6 py-3 uppercase tracking-widest hover:bg-[#1A1D23] transition-colors rounded-sm">
+                            The Audit (Secondary)
+                        </button>
+                        <!-- Eviction -->
+                        <button
+                            class="border border-eviction text-eviction font-mono text-xs px-6 py-3 uppercase tracking-widest hover:animate-pulse-fast transition-colors rounded-sm">
+                            The Eviction (Alert)
+                        </button>
+                        <!-- Disabled -->
+                        <button disabled
+                            class="bg-hard text-gray-500 font-sans font-bold tracking-widest text-xs px-6 py-3 uppercase rounded-sm cursor-not-allowed opacity-50">
+                            Locked State
+                        </button>
+                    </div>
+                </div>
+
+                <!-- COMPONENT 2: Inputs -->
+                <div class="mb-24">
+                    <h3 class="font-mono text-sm text-white mb-6 border-b border-hard pb-2">8.2 // Input Vectors</h3>
+                    <div class="bg-surface border border-hard p-12 grid md:grid-cols-2 gap-8">
+                        <div class="flex flex-col gap-2">
+                            <label class="font-mono text-[10px] text-id uppercase tracking-widest">Node Name</label>
+                            <input type="text" value="Alpha_Sector_9"
+                                class="bg-void border border-hard px-4 py-3 font-mono text-xs text-white focus:border-protocol focus:outline-none rounded-sm">
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label class="font-mono text-[10px] text-id uppercase tracking-widest">Protocol
+                                Version</label>
+                            <select
+                                class="bg-void border border-hard px-4 py-3 font-mono text-xs text-white focus:border-protocol focus:outline-none rounded-sm appearance-none cursor-pointer">
+                                <option>v1.1.0-STABLE</option>
+                                <option>v1.2.0-BETA</option>
+                            </select>
+                        </div>
+                        <!-- Checkbox / Toggle -->
+                        <div class="flex items-center gap-6 col-span-2 mt-4" x-data="{ toggle: true }">
+                            <label class="flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox" checked
+                                    class="w-4 h-4 bg-void border-hard text-protocol focus:ring-protocol rounded-sm accent-protocol">
+                                <span class="font-sans text-sm text-gray-300">Auto-verify ledger entries</span>
+                            </label>
+
+                            <div class="w-[1px] h-6 bg-hard"></div>
+
+                            <button @click="toggle = !toggle"
+                                class="relative inline-flex h-5 w-9 items-center rounded-sm transition-colors"
+                                :class="toggle ? 'bg-protocol' : 'bg-hard'">
+                                <span class="inline-block h-3 w-3 transform rounded-sm bg-white transition-transform"
+                                    :class="toggle ? 'translate-x-5' : 'translate-x-1'"></span>
+                            </button>
+                            <span class="font-mono text-[10px] text-gray-400 uppercase tracking-widest">Deep Scan</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COMPONENT 3 & 4: Cards & Badges -->
+                <div class="mb-24">
+                    <h3 class="font-mono text-sm text-white mb-6 border-b border-hard pb-2">8.3 // High Density Protocol
+                        Card & Badges</h3>
+                    <div class="bg-void p-12 grid md:grid-cols-2 gap-8">
+                        <!-- The Card -->
+                        <div
+                            class="bg-surface border border-hard hover:border-protocol/50 transition-colors rounded-sm relative p-6 flex flex-col group cursor-pointer">
+                            <!-- Corner Badges -->
+                            <div
+                                class="absolute top-0 left-0 bg-consensus px-2 py-1 flex items-center gap-1 rounded-br-sm">
+                                <div class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
+                                <span class="font-mono text-[8px] text-white uppercase tracking-widest">Verified</span>
+                            </div>
+                            <div class="absolute top-0 right-0 border-b border-l border-hard bg-void px-2 py-1">
+                                <span class="font-mono text-[8px] text-id uppercase tracking-widest">UID: 0x8F2</span>
+                            </div>
+
+                            <h4
+                                class="font-sans font-bold text-white text-lg mt-6 mb-2 group-hover:text-protocol transition-colors">
+                                Quantum State Entanglement</h4>
+                            <p class="font-sans text-sm text-gray-400 mb-6 leading-relaxed line-clamp-2">
+                                Documentation of the primary behavioral vectors during phase transition. Analyzed
+                                through the lens of objective systemic evaluation.
+                            </p>
+
+                            <div class="mt-auto pt-4 border-t border-hard flex justify-between items-center">
+                                <span class="font-mono text-[10px] text-gray-500">PEERS: 24</span>
+                                <button
+                                    class="font-mono text-[10px] text-protocol uppercase tracking-widest group-hover:underline">Engage
+                                    Node</button>
+                            </div>
+                        </div>
+
+                        <!-- Alternative States -->
+                        <div class="flex flex-col gap-4">
+                            <div
+                                class="border border-eviction bg-eviction/5 p-4 rounded-sm flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="alert-triangle" class="w-4 h-4 text-eviction"></i>
+                                    <span class="font-mono text-xs text-eviction uppercase tracking-widest">Eviction
+                                        Warning</span>
+                                </div>
+                                <button
+                                    class="text-[10px] font-mono text-white bg-eviction px-2 py-1 rounded-sm">Purge</button>
+                            </div>
+
+                            <div class="border border-voter bg-voter/5 p-4 rounded-sm flex items-center gap-3">
+                                <i data-lucide="clock" class="w-4 h-4 text-voter"></i>
+                                <span class="font-mono text-xs text-voter uppercase tracking-widest">Pending
+                                    Rationale</span>
+                            </div>
+
+                            <div class="flex gap-2 mt-4">
+                                <span
+                                    class="border border-hard text-gray-300 font-mono text-[10px] px-2 py-1 uppercase tracking-widest">Neutral
+                                    Badge</span>
+                                <span
+                                    class="border border-id text-id font-mono text-[10px] px-2 py-1 uppercase tracking-widest bg-id/10">ID
+                                    Vector</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COMPONENT 5: Navigation & Tabs -->
+                <div class="mb-24">
+                    <h3 class="font-mono text-sm text-white mb-6 border-b border-hard pb-2">8.4 // Horizontal Rail &
+                        Tabs</h3>
+                    <div class="bg-surface border border-hard p-1 flex flex-col gap-12">
+
+                        <!-- Top Nav -->
+                        <div class="h-14 bg-rail border-b border-hard flex items-center justify-between px-6">
+                            <div class="flex items-center gap-4">
+                                <div class="w-6 h-6 bg-protocol-mint flex items-center justify-center"><span
+                                        class="font-sans font-bold text-[10px] text-white">B</span></div>
+                                <span class="font-mono text-[10px] text-white tracking-widest">SYSTEM //
+                                    DASHBOARD</span>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="relative w-4 h-4 text-gray-400 hover:text-white cursor-pointer"><i
+                                        data-lucide="bell" class="w-4 h-4"></i>
+                                    <div class="absolute -top-1 -right-1 w-2 h-2 bg-eviction rounded-full"></div>
+                                </div>
+                                <div class="w-6 h-6 bg-hard border border-gray-600 rounded-sm"></div>
+                            </div>
+                        </div>
+
+                        <!-- Tabs -->
+                        <div class="px-6" x-data="{ tab: 'ledger' }">
+                            <div class="flex gap-8 border-b border-hard">
+                                <button @click="tab = 'ledger'"
+                                    :class="tab === 'ledger' ? 'border-protocol text-protocol' : 'border-transparent text-gray-500 hover:text-gray-300'"
+                                    class="pb-3 border-b-2 font-mono text-xs uppercase tracking-widest transition-colors">Ledger</button>
+                                <button @click="tab = 'nodes'"
+                                    :class="tab === 'nodes' ? 'border-protocol text-protocol' : 'border-transparent text-gray-500 hover:text-gray-300'"
+                                    class="pb-3 border-b-2 font-mono text-xs uppercase tracking-widest transition-colors">Nodes</button>
+                                <button @click="tab = 'consensus'"
+                                    :class="tab === 'consensus' ? 'border-protocol text-protocol' : 'border-transparent text-gray-500 hover:text-gray-300'"
+                                    class="pb-3 border-b-2 font-mono text-xs uppercase tracking-widest transition-colors">Consensus</button>
+                            </div>
+                            <div class="py-6 font-sans text-sm text-gray-400 min-h-[100px]">
+                                <div x-show="tab === 'ledger'"
+                                    x-transition:enter="transition ease-out duration-200 transform"
+                                    x-transition:enter-start="opacity-0 translate-y-4"
+                                    x-transition:enter-end="opacity-100 translate-y-0">Displaying immutable records for
+                                    current epoch.</div>
+                                <div x-show="tab === 'nodes'" style="display:none;"
+                                    x-transition:enter="transition ease-out duration-200 transform"
+                                    x-transition:enter-start="opacity-0 translate-y-4"
+                                    x-transition:enter-end="opacity-100 translate-y-0">Active nodes: 12,042. Network
+                                    stability nominal.</div>
+                                <div x-show="tab === 'consensus'" style="display:none;"
+                                    x-transition:enter="transition ease-out duration-200 transform"
+                                    x-transition:enter-start="opacity-0 translate-y-4"
+                                    x-transition:enter-end="opacity-100 translate-y-0">Consensus threshold at 98.4%.
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- COMPONENT 6: Data Table (Ledger) & Accordion -->
+                <div class="mb-24">
+                    <h3 class="font-mono text-sm text-white mb-6 border-b border-hard pb-2">8.5 // Ledger (Data Table &
+                        Accordion)</h3>
+                    <div class="bg-surface border border-hard" x-data="{ expanded: 1 }">
+                        <!-- Header -->
+                        <div
+                            class="grid grid-cols-12 gap-4 px-6 py-3 border-b border-hard bg-rail font-mono text-[10px] text-gray-500 uppercase tracking-widest">
+                            <div class="col-span-3">Timestamp</div>
+                            <div class="col-span-5">Hash / Entity</div>
+                            <div class="col-span-2 text-right">Status</div>
+                            <div class="col-span-2 text-right">Action</div>
+                        </div>
+
+                        <!-- Row 1 -->
+                        <div class="border-b border-hard">
+                            <div class="grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-[#1A1D23] transition-colors cursor-pointer"
+                                @click="expanded = expanded === 1 ? null : 1">
+                                <div class="col-span-3 font-mono text-[10px] text-gray-400">2026-05-15_19:36</div>
+                                <div class="col-span-5 flex items-center gap-2">
+                                    <i data-lucide="file-code" class="w-4 h-4 text-id"></i>
+                                    <span class="font-mono text-xs text-id">0x8A2...91B</span>
+                                </div>
+                                <div class="col-span-2 text-right font-mono text-[10px] text-consensus">VERIFIED</div>
+                                <div class="col-span-2 text-right"><i :class="expanded === 1 ? 'rotate-180' : ''"
+                                        data-lucide="chevron-down"
+                                        class="w-4 h-4 text-gray-500 inline-block transition-transform"></i></div>
+                            </div>
+                            <div x-show="expanded === 1" x-collapse class="bg-void border-t border-hard">
+                                <div class="p-6 font-sans text-sm text-gray-400 border-l-2 border-protocol ml-6 my-4">
+                                    Detailed rationale for consensus approval. The structural integrity of the submitted
+                                    knowledge packet meets B.L.U.E. protocol thresholds.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 2 -->
+                        <div class="border-b border-hard">
+                            <div class="grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-[#1A1D23] transition-colors cursor-pointer"
+                                @click="expanded = expanded === 2 ? null : 2">
+                                <div class="col-span-3 font-mono text-[10px] text-gray-400">2026-05-15_18:20</div>
+                                <div class="col-span-5 flex items-center gap-2">
+                                    <i data-lucide="shield-alert" class="w-4 h-4 text-voter"></i>
+                                    <span class="font-mono text-xs text-white">0x7F1...33C</span>
+                                </div>
+                                <div class="col-span-2 text-right font-mono text-[10px] text-voter">PENDING</div>
+                                <div class="col-span-2 text-right"><i :class="expanded === 2 ? 'rotate-180' : ''"
+                                        data-lucide="chevron-down"
+                                        class="w-4 h-4 text-gray-500 inline-block transition-transform"></i></div>
+                            </div>
+                            <div x-show="expanded === 2" x-collapse style="display:none;"
+                                class="bg-void border-t border-hard">
+                                <div class="p-6 font-mono text-[10px] text-gray-500">AWAITING 4 PEER SIGNATURES.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COMPONENT 7: Modals, Tooltips, Progress, Empty State -->
+                <div class="grid md:grid-cols-2 gap-12 mb-24">
+
+                    <!-- Modal / Deep Scan -->
+                    <div x-data="{ open: false }">
+                        <h3 class="font-mono text-sm text-white mb-6 border-b border-hard pb-2">8.6 // Modal (Deep Scan)
+                        </h3>
+                        <button @click="open = true"
+                            class="bg-surface border border-hard text-white font-mono text-xs px-6 py-3 uppercase tracking-widest hover:border-protocol transition-colors rounded-sm w-full">
+                            Initialize Modal
+                        </button>
+
+                        <!-- Modal Overlay -->
+                        <div x-show="open" style="display:none;"
+                            class="fixed inset-0 z-50 flex items-center justify-center bg-void/90 backdrop-blur-sm p-6"
+                            x-transition.opacity>
+                            <div class="bg-surface border border-hard w-full max-w-lg relative overflow-hidden"
+                                @click.away="open = false" x-show="open"
+                                x-transition:enter="transition ease-out duration-300 transform"
+                                x-transition:enter-start="scale-95 opacity-0"
+                                x-transition:enter-end="scale-100 opacity-100">
+                                <!-- Scan Line Animation -->
+                                <div
+                                    class="absolute inset-0 w-full h-[2px] bg-protocol/50 shadow-[0_0_15px_#3B82F6] animate-deep-scan pointer-events-none">
+                                </div>
+
+                                <div class="p-6 border-b border-hard flex justify-between items-center">
+                                    <span class="font-mono text-[10px] text-protocol uppercase tracking-widest">Node
+                                        Interrogation</span>
+                                    <button @click="open = false" class="text-gray-500 hover:text-white"><i
+                                            data-lucide="x" class="w-4 h-4"></i></button>
+                                </div>
+                                <div class="p-8">
+                                    <h4 class="font-serif italic text-3xl text-white mb-4">Verification Required</h4>
+                                    <p class="font-sans text-sm text-gray-400 mb-8">You are about to modify the
+                                        immutable ledger. This action requires cryptographic proof.</p>
+
+                                    <!-- Loading Skeleton -->
+                                    <div class="flex flex-col gap-3 mb-8">
+                                        <div class="h-2 w-full bg-hard animate-pulse rounded-sm"></div>
+                                        <div class="h-2 w-3/4 bg-hard animate-pulse rounded-sm"></div>
+                                        <div class="h-2 w-1/2 bg-hard animate-pulse rounded-sm"></div>
+                                    </div>
+
+                                    <button @click="open = false"
+                                        class="w-full bg-protocol-mint text-white font-sans font-bold tracking-widest text-xs py-3 uppercase rounded-sm">Confirm
+                                        Synthesis</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tooltips & Progress -->
+                    <div>
+                        <h3 class="font-mono text-sm text-white mb-6 border-b border-hard pb-2">8.7 // Utility Patterns
+                        </h3>
+                        <div class="bg-surface border border-hard p-8 flex flex-col gap-8">
+
+                            <!-- Tooltip -->
+                            <div class="flex items-center gap-4 relative group w-max">
+                                <span
+                                    class="font-mono text-xs text-white border-b border-dashed border-gray-500 cursor-help">Hover
+                                    for Metadata</span>
+                                <!-- Tooltip Content -->
+                                <div
+                                    class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max bg-void border border-hard p-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                                    <span class="font-mono text-[10px] text-id">UID: B-993-X</span>
+                                </div>
+                            </div>
+
+                            <!-- Progress -->
+                            <div>
+                                <div class="flex justify-between font-mono text-[10px] mb-2">
+                                    <span class="text-gray-400 uppercase">Consensus Sync</span>
+                                    <span class="text-protocol">74%</span>
+                                </div>
+                                <div class="w-full h-1 bg-void border border-hard">
+                                    <div class="h-full bg-protocol w-[74%] shadow-[0_0_10px_rgba(59,130,246,0.5)]">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COMPONENT 8: Soulbound Identity (Avatar) & Empty State -->
+                <div class="grid md:grid-cols-2 gap-12">
+
+                    <!-- Identity -->
+                    <div>
+                        <h3 class="font-mono text-sm text-white mb-6 border-b border-hard pb-2">8.8 // Soulbound
+                            Identity</h3>
+                        <div class="bg-surface border border-hard p-8 flex items-center gap-6">
+                            <div
+                                class="w-16 h-16 border border-hard overflow-hidden relative group rounded-sm cursor-pointer">
+                                <!-- Placeholder Image - Grayscale -> Color -->
+                                <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80"
+                                    alt="Identity"
+                                    class="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 group-hover:brightness-110 transition-all duration-500">
+                                <div class="absolute bottom-0 right-0 w-3 h-3 bg-consensus border border-surface"></div>
+                            </div>
+                            <div>
+                                <div class="font-sans font-bold text-white mb-1">Architect_Prime</div>
+                                <div class="font-mono text-[10px] text-id uppercase">Rank: Observer</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div>
+                        <h3 class="font-mono text-sm text-white mb-6 border-b border-hard pb-2">8.9 // The Void (Empty
+                            State)</h3>
+                        <div
+                            class="bg-surface border border-hard p-12 flex flex-col items-center justify-center text-center">
+                            <i data-lucide="inbox" class="w-8 h-8 text-hard mb-4"></i>
+                            <h4 class="font-serif italic text-2xl text-gray-300 mb-2">No Knowledge Detected</h4>
+                            <p class="font-sans text-xs text-gray-500 max-w-xs mb-6">This vector is currently void of
+                                ledger entries. Begin synthesis to populate.</p>
+                            <button
+                                class="border border-hard text-gray-300 font-mono text-[10px] px-4 py-2 uppercase tracking-widest hover:bg-[#1A1D23]">Initialize</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 9: Motion Principles -->
+        <section id="motion" class="py-32 px-6 lg:px-24 border-t border-hard bg-rail section-observe">
+            <div class="max-w-5xl gsap-stagger">
+                <p class="font-mono text-[10px] uppercase tracking-widest text-protocol mb-4">08 // Kinetics</p>
+                <h2 class="text-4xl lg:text-6xl font-serif italic tracking-tight text-white mb-6">Precision Animation
+                </h2>
+                <p class="font-sans text-gray-400 mb-16 max-w-2xl">All motion must feel mechanical, precise, and
+                    deliberate. No bouncy physics. Use strict ease-in-out slides and harsh opacity fades.</p>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Slide -->
+                    <div
+                        class="border border-hard bg-surface p-8 text-center group cursor-pointer overflow-hidden relative h-48 flex items-center justify-center">
+                        <span class="font-mono text-xs text-gray-500 group-hover:opacity-0 transition-opacity">Hover:
+                            Slide Up</span>
+                        <div
+                            class="absolute inset-x-0 bottom-0 bg-protocol h-full flex items-center justify-center translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out">
+                            <span class="font-sans font-bold text-white">Y: 20 -> 0</span>
+                        </div>
+                    </div>
+                    <!-- Fade Scan -->
+                    <div
+                        class="border border-hard bg-surface p-8 text-center group cursor-pointer overflow-hidden relative h-48 flex items-center justify-center">
+                        <div
+                            class="w-full h-full border border-protocol/0 group-hover:border-protocol/100 bg-void group-hover:bg-protocol/10 transition-all duration-500 flex items-center justify-center relative">
+                            <div
+                                class="absolute w-full h-[1px] bg-protocol top-0 -translate-y-full group-hover:animate-deep-scan">
+                            </div>
+                            <span
+                                class="font-mono text-xs text-protocol opacity-0 group-hover:opacity-100 transition-opacity delay-100">Deep
+                                Scan</span>
+                        </div>
+                    </div>
+                    <!-- Pulse -->
+                    <div class="border border-hard bg-surface p-8 text-center flex items-center justify-center h-48">
+                        <button
+                            class="border border-eviction text-eviction font-mono text-xs px-6 py-3 uppercase tracking-widest animate-pulse-fast">
+                            Eviction Pulse
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 10: Imagery & Photography -->
+        <section id="imagery" class="py-32 px-6 lg:px-24 border-t border-hard section-observe">
+            <div class="max-w-5xl gsap-stagger">
+                <p class="font-mono text-[10px] uppercase tracking-widest text-protocol mb-4">09 // Visuals</p>
+                <h2 class="text-4xl lg:text-6xl font-serif italic tracking-tight text-white mb-6">Soulbound States</h2>
+                <p class="font-sans text-gray-400 mb-16 max-w-2xl">Photography is restricted to user identity. By
+                    default, it is muted (grayscale) to fit the technical environment, blooming into full color upon
+                    interaction.</p>
+
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div>
+                        <div
+                            class="aspect-[4/3] bg-surface border border-hard overflow-hidden group cursor-pointer relative mb-4">
+                            <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                                alt="Tech"
+                                class="w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 group-hover:brightness-110 transition-all duration-700 ease-in-out">
+                            <div
+                                class="absolute inset-0 border-[4px] border-transparent group-hover:border-protocol/30 transition-colors">
+                            </div>
+                        </div>
+                        <p class="font-mono text-[10px] text-gray-500 uppercase tracking-widest">Hover to realize state.
+                        </p>
+                    </div>
+                    <div class="flex flex-col justify-center">
+                        <h3 class="font-sans font-bold text-xl text-white mb-4">Image Treatment</h3>
+                        <ul class="font-sans text-sm text-gray-400 space-y-4 border-l-2 border-hard pl-6">
+                            <li><strong>Base State:</strong> <code class="bg-rail px-1">grayscale opacity-60</code></li>
+                            <li><strong>Hover State:</strong> <code
+                                    class="bg-rail px-1">grayscale-0 opacity-100 brightness-110</code></li>
+                            <li><strong>Border:</strong> Always contained within 1px solid <code
+                                    class="bg-rail px-1">#1F242D</code>. No border radius greater than 2px.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 11: Voice & Tone + DO/DONT -->
+        <section id="voice" class="py-32 px-6 lg:px-24 border-t border-hard bg-rail section-observe">
+            <div class="max-w-5xl gsap-stagger">
+                <p class="font-mono text-[10px] uppercase tracking-widest text-protocol mb-4">10 // Communication</p>
+                <h2 class="text-4xl lg:text-6xl font-serif italic tracking-tight text-white mb-16">Tone & Syntax</h2>
+
+                <div class="grid md:grid-cols-2 gap-12 mb-16">
+                    <!-- Voice Adjectives -->
+                    <div class="bg-surface border border-hard p-8">
+                        <h3 class="font-mono text-sm text-white mb-6 border-b border-hard pb-2">Traits</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check" class="w-4 h-4 text-consensus shrink-0 mt-0.5"></i>
+                                <div>
+                                    <strong class="font-sans text-white text-sm block">Authoritative</strong>
+                                    <span class="font-sans text-xs text-gray-400">State facts. Do not suggest.</span>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check" class="w-4 h-4 text-consensus shrink-0 mt-0.5"></i>
+                                <div>
+                                    <strong class="font-sans text-white text-sm block">Objective</strong>
+                                    <span class="font-sans text-xs text-gray-400">Do not praise. The protocol verifies,
+                                        it does not congratulate.</span>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check" class="w-4 h-4 text-consensus shrink-0 mt-0.5"></i>
+                                <div>
+                                    <strong class="font-sans text-white text-sm block">Ethereal</strong>
+                                    <span class="font-sans text-xs text-gray-400">Use elevated, academic engineering
+                                        terms (Synthesize, Ledger, Epoch).</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- DO/DONT Table -->
+                    <div class="bg-surface border border-hard p-0 overflow-hidden">
+                        <div
+                            class="grid grid-cols-2 bg-void border-b border-hard font-mono text-[10px] uppercase tracking-widest text-gray-500">
+                            <div class="p-4 border-r border-hard">Do Write</div>
+                            <div class="p-4">Don't Write</div>
+                        </div>
+                        <div class="grid grid-cols-2 border-b border-hard font-sans text-sm">
+                            <div class="p-4 border-r border-hard text-white">Node Verified. Ledger appended.</div>
+                            <div class="p-4 text-gray-500">Great job! You verified the node! 🎉</div>
+                        </div>
+                        <div class="grid grid-cols-2 border-b border-hard font-sans text-sm">
+                            <div class="p-4 border-r border-hard text-white">Insufficient consensus threshold.</div>
+                            <div class="p-4 text-gray-500">Oops, you need more friends to agree.</div>
+                        </div>
+                        <div class="grid grid-cols-2 font-sans text-sm">
+                            <div class="p-4 border-r border-hard text-white">Initiate Synthesis</div>
+                            <div class="p-4 text-gray-500">Create New Post</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 12: Downloads / Footer -->
+        <section id="downloads" class="py-32 px-6 lg:px-24 border-t border-hard bg-void section-observe">
+            <div class="max-w-5xl gsap-stagger text-center">
+                <div class="w-16 h-16 bg-protocol-mint flex items-center justify-center mx-auto mb-8">
+                    <span class="font-sans font-bold text-white text-3xl leading-none">B</span>
+                </div>
+                <h2 class="text-4xl font-serif italic tracking-tight text-white mb-6">Protocol Assets Ready</h2>
+                <p class="font-sans text-gray-400 mb-12 max-w-xl mx-auto">Download the vector nodes, color token files
+                    (JSON), and typography guidelines for local synthesis.</p>
+
+                <div class="flex justify-center gap-4">
+                    <button
+                        class="bg-white text-void font-bold tracking-widest font-sans text-xs px-8 py-4 uppercase rounded-sm hover:bg-gray-200 transition-colors flex items-center gap-2">
+                        <i data-lucide="package" class="w-4 h-4"></i> Download Full Kit (.ZIP)
+                    </button>
+                </div>
+
+                <div class="mt-32 font-mono text-[10px] text-gray-600 uppercase tracking-widest">
+                    End of Specification // B.L.U.E. Protocol // Immutable
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Application Logic -->
+    <script>
+        // Alpine.js Logic
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('brandBook', () => ({
+                activeSection: 'hero',
+                toast: { show: false, message: '' },
+                iconSearch: '',
+                allIcons: ['database', 'shield', 'shield-alert', 'server', 'cpu', 'terminal', 'network', 'lock', 'unlock', 'file-code', 'activity', 'aperture', 'box', 'code', 'command', 'compass', 'crosshair', 'fingerprint', 'globe', 'hard-drive', 'hash', 'hexagon', 'key', 'layers', 'layout', 'link', 'maximize', 'milestone', 'radio', 'scan', 'share-2', 'wifi'],
+
+                sections: [
+                    { id: 'hero', title: 'Initialization', icon: 'power' },
+                    { id: 'story', title: 'Philosophy', icon: 'book-open' },
+                    { id: 'logo', title: 'The Node', icon: 'hexagon' },
+                    { id: 'colors', title: 'Obsidian Stack', icon: 'palette' },
+                    { id: 'typography', title: 'Syntax', icon: 'type' },
+                    { id: 'icons', title: 'Symbology', icon: 'grid' },
+                    { id: 'grid', title: 'Structure', icon: 'layout' },
+                    { id: 'components', title: 'Entities', icon: 'layers' },
+                    { id: 'motion', title: 'Kinetics', icon: 'activity' },
+                    { id: 'imagery', title: 'Soulbound', icon: 'image' },
+                    { id: 'voice', title: 'Tone', icon: 'mic' }
+                ],
+
+                colors: {
+                    neutrals: [
+                        { name: 'Deep Void', hex: '#0D0F12', purpose: 'Main app background' },
+                        { name: 'Shaded Surface', hex: '#111418', purpose: 'Secondary panels' },
+                        { name: 'Active Rail', hex: '#0E1116', purpose: 'Navigation backgrounds' },
+                        { name: 'Hard Border', hex: '#1F242D', purpose: '1px structural lines' }
+                    ],
+                    accents: [
+                        { name: 'Protocol Blue', hex: '#3B82F6', purpose: 'Primary interactions' },
+                        { name: 'Identity ID', hex: '#93C5FD', purpose: 'UID strings, metadata' },
+                        { name: 'Consensus', hex: '#22C55E', purpose: 'Verified status' },
+                        { name: 'Eviction', hex: '#EF4444', purpose: 'Security alerts' },
+                        { name: 'Voter Yellow', hex: '#EAB308', purpose: 'Pending rationale' }
+                    ]
+                },
+
+                get filteredIcons() {
+                    if (this.iconSearch === '') return this.allIcons;
+                    return this.allIcons.filter(i => i.includes(this.iconSearch.toLowerCase()));
+                },
+
+                copy(text, label) {
+                    navigator.clipboard.writeText(text);
+                    this.toast.message = `${label} COPIED TO CLIPBOARD`;
+                    this.toast.show = true;
+                    setTimeout(() => { this.toast.show = false; }, 3000);
+                },
+
+                updateNav() {
+                    const sectionsElements = document.querySelectorAll('section');
+                    let current = this.activeSection;
+
+                    sectionsElements.forEach(sec => {
+                        const rect = sec.getBoundingClientRect();
+                        // If the section is near the top of the viewport
+                        if (rect.top <= 150 && rect.bottom >= 150) {
+                            current = sec.id;
+                        }
+                    });
+                    this.activeSection = current;
+                }
+            }))
+        });
+
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // GSAP Scroll Animations
+        document.addEventListener("DOMContentLoaded", (event) => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            const sections = document.querySelectorAll('.section-observe');
+
+            sections.forEach((section) => {
+                const staggerElements = section.querySelectorAll('.gsap-stagger > *');
+                if (staggerElements.length > 0) {
+                    gsap.from(staggerElements, {
+                        scrollTrigger: {
+                            trigger: section,
+                            start: "top 80%",
+                            toggleActions: "play none none none"
+                        },
+                        y: 40,
+                        opacity: 0,
+                        duration: 0.8,
+                        stagger: 0.1,
+                        ease: "power3.out"
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
